@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Dashboard - BITTRIXPAY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="dark-mode">
+  <script>
+    // Apply theme IMMEDIATELY before any rendering to prevent flash
+    if (localStorage.getItem('theme') === 'light') {
+      document.body.classList.remove('dark-mode');
+    }
+  </script>
+
+  <!-- Top Header -->
+  <header class="app-header">
+    <a href="dashboard.html" class="logo">
+      <img src="logo.jpeg" alt="BITTRIXPAY" class="logo-icon">
+      <span>BITTRIXPAY</span>
+    </a>
+    <div class="header-right">
+      <button class="notification-bell" id="notificationBell" onclick="showToast('No new notifications', 'info')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      </button>
+      <div class="user-avatar-sm" id="headerAvatar" onclick="showSection('settings')">
+        <span id="headerInitials">U</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Scrollable Content -->
+  <main class="app-content">
+    <div class="dashboard-content">
+
+      <!-- Overview Section -->
+      <section class="content-section active" id="overview-section">
+        <!-- Welcome Text -->
+        <div class="welcome-text-bar">
+          <p class="greeting">Welcome back,</p>
+          <h1 id="welcomeName">User</h1>
+        </div>
+
+        <!-- Wallet Overview - Naira & Crypto -->
+        <div class="wallet-overview">
+          <div class="wallet-tabs">
+            <button class="wallet-tab active" data-wallet="naira" onclick="switchWalletTab('naira')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg>
+              Naira Wallet
+            </button>
+            <button class="wallet-tab" data-wallet="crypto" onclick="switchWalletTab('crypto')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 8h5a2.5 2.5 0 0 1 0 5H9v3h6"/><path d="M12 6v2m0 8v2"/></svg>
+              Crypto Wallet
+            </button>
+          </div>
+          <div class="wallet-panel active" id="nairaWalletPanel">
+            <div class="wallet-balance-row">
+              <div class="wallet-currency">
+                <div class="currency-icon naira">&#8358;</div>
+                <div>
+                  <div class="currency-name">Nigerian Naira</div>
+                  <div class="currency-code">NGN</div>
+                </div>
+              </div>
+              <div class="wallet-amount" id="nairaBalance">&#8358;0</div>
+            </div>
+            <div class="wallet-actions-row">
+              <button class="wallet-action-btn" onclick="openFundModal()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Deposit
+              </button>
+              <button class="wallet-action-btn" onclick="showSection('crypto')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                Trade
+              </button>
+              <button class="wallet-action-btn" onclick="showSection('transactions')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg>
+                History
+              </button>
+            </div>
+          </div>
+          <div class="wallet-panel" id="cryptoWalletPanel">
+            <div class="wallet-balance-row">
+              <div class="wallet-currency">
+                <div class="currency-icon crypto-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.5 8h5a2.5 2.5 0 0 1 0 5H9v3h6"/></svg>
+                </div>
+                <div>
+                  <div class="currency-name">Crypto Portfolio</div>
+                  <div class="currency-code">Multi-coin</div>
+                </div>
+              </div>
+              <div class="wallet-amount" id="cryptoPortfolioValue">&#8358;0</div>
+            </div>
+            <div class="crypto-holdings-mini" id="cryptoHoldingsMini">
+              <p class="text-muted" style="font-size:0.8rem;">No holdings yet</p>
+            </div>
+            <div class="wallet-actions-row">
+              <button class="wallet-action-btn" onclick="showSection('crypto')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Buy Crypto
+              </button>
+              <button class="wallet-action-btn" onclick="showSection('crypto')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/></svg>
+                Sell Crypto
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions (Horizontal) -->
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="actions-scroll">
+            <button class="action-card" onclick="showSection('crypto')">
+              <span class="action-icon" style="background: rgba(245,158,11,0.15);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 8h5a2.5 2.5 0 0 1 0 5H9v3h6"/><path d="M12 6v2m0 8v2"/></svg>
+              </span>
+              <span class="action-label">Crypto</span>
+            </button>
+            <button class="action-card" onclick="showSection('giftcards')">
+              <span class="action-icon" style="background: rgba(236,72,153,0.15);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8V21"/><path d="M3 12h18"/><path d="M12 8c-2-3-6-3-6 0s4 0 6-3 6 3 6 0-4 0-6 3"/></svg>
+              </span>
+              <span class="action-label">Gift Cards</span>
+            </button>
+            <button class="action-card" onclick="showSection('bills')">
+              <span class="action-icon" style="background: rgba(59,130,246,0.15);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01"/><path d="M10 8h8"/><path d="M6 12h.01"/><path d="M10 12h8"/><path d="M6 16h.01"/><path d="M10 16h8"/></svg>
+              </span>
+              <span class="action-label">Bills</span>
+            </button>
+            <button class="action-card" onclick="showSection('social')">
+              <span class="action-icon" style="background: rgba(139,92,246,0.15);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </span>
+              <span class="action-label">Social</span>
+            </button>
+            <button class="action-card" onclick="showSection('numbers')">
+              <span class="action-icon" style="background: rgba(16,185,129,0.15);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+              </span>
+              <span class="action-label">Numbers</span>
+            </button>
+            <button class="action-card" onclick="toggleRateCalculator()">
+              <span class="action-icon" style="background: rgba(99,102,241,0.15);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="10" y2="10"/><line x1="12" y1="10" x2="14" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="10" y2="14"/><line x1="12" y1="14" x2="14" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="16" y2="18"/></svg>
+              </span>
+              <span class="action-label">Rate Calc</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Inline Rate Calculator (Hidden by default) -->
+        <div class="rate-calculator-inline" id="rateCalculatorInline" style="display: none;">
+          <div class="card">
+            <div class="rate-calc-header">
+              <h3>Rate Calculator</h3>
+              <button class="close-calc-btn" onclick="toggleRateCalculator()">&times;</button>
+            </div>
+            <div class="rate-calc-tabs">
+              <button class="rate-calc-tab active" onclick="switchRateCalcTab('crypto-calc', event)">Crypto</button>
+              <button class="rate-calc-tab" onclick="switchRateCalcTab('giftcard-calc', event)">Gift Card</button>
+            </div>
+            <div class="rate-calc-panel active" id="crypto-calc-panel">
+              <div class="form-group">
+                <label>Cryptocurrency</label>
+                <select id="rateCalcCrypto" onchange="calculateRate()">
+                  <option value="">-- Select --</option>
+                  <option value="BTC" data-price="67500">Bitcoin (BTC)</option>
+                  <option value="ETH" data-price="3450">Ethereum (ETH)</option>
+                  <option value="USDT" data-price="1">Tether (USDT)</option>
+                  <option value="BNB" data-price="580">Binance Coin (BNB)</option>
+                  <option value="SOL" data-price="145">Solana (SOL)</option>
+                  <option value="XRP" data-price="0.62">Ripple (XRP)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Amount</label>
+                <input type="number" id="rateCalcAmount" placeholder="Enter amount" step="0.0001" oninput="calculateRate()">
+              </div>
+              <div class="rate-calc-result" id="rateCalcResult">
+                <div class="result-row"><span>USD Value:</span><span id="rateResultUsd">$0</span></div>
+                <div class="result-row"><span>NGN Value:</span><span id="rateResultNgn">&#8358;0</span></div>
+              </div>
+            </div>
+            <div class="rate-calc-panel" id="giftcard-calc-panel">
+              <div class="form-group">
+                <label>Gift Card</label>
+                <select id="rateCalcGiftcard" onchange="calculateGiftcardRate()">
+                  <option value="">-- Select --</option>
+                  <option value="Amazon" data-buy="1400" data-sell="1320">Amazon</option>
+                  <option value="iTunes" data-buy="1380" data-sell="1280">iTunes</option>
+                  <option value="Google Play" data-buy="1350" data-sell="1250">Google Play</option>
+                  <option value="Steam" data-buy="1420" data-sell="1350">Steam</option>
+                  <option value="Netflix" data-buy="1380" data-sell="1300">Netflix</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Card Value (USD)</label>
+                <input type="number" id="rateCalcGiftcardValue" placeholder="e.g. 50" min="5" oninput="calculateGiftcardRate()">
+              </div>
+              <div class="rate-calc-result" id="rateCalcGiftcardResult">
+                <div class="result-row"><span>Buy Rate:</span><span id="gcBuyResult">&#8358;0</span></div>
+                <div class="result-row"><span>Sell Rate:</span><span id="gcSellResult">&#8358;0</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Transactions</span>
+              <span class="stat-value" id="totalTransactions">0</span>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon crypto">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 8h5a2.5 2.5 0 0 1 0 5H9v3h6"/><path d="M12 6v2m0 8v2"/></svg>
+            </div>
+            <div class="stat-info">
+              <span class="stat-label">Crypto Holdings</span>
+              <span class="stat-value" id="cryptoHoldings">0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="card mt-4">
+          <h3>Recent Transactions</h3>
+          <div class="transactions-list" id="recentTransactions">
+            <p class="text-muted">No transactions yet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Crypto Trading Section -->
+      <section class="content-section" id="crypto-section">
+        <div class="section-back">
+          <button class="back-btn" onclick="showSection('overview')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+        <h1>Crypto Trading</h1>
+        <p class="text-muted">Buy and sell cryptocurrencies at the best rates</p>
+
+        <div class="trading-container">
+          <div class="card">
+            <h3>Trade Crypto</h3>
+            <div class="trade-tabs">
+              <button class="trade-tab active" data-type="buy">Buy</button>
+              <button class="trade-tab" data-type="sell">Sell</button>
+            </div>
+
+            <div class="trade-form">
+              <div class="form-group">
+                <label>Select Cryptocurrency</label>
+                <select id="cryptoSelect">
+                  <option value="">-- Select crypto --</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Amount</label>
+                <input type="number" id="cryptoAmount" placeholder="Enter amount" step="0.0001" min="0">
+              </div>
+
+              <div class="trade-summary">
+                <div class="summary-row">
+                  <span>Price per unit:</span>
+                  <span id="cryptoPrice">$0</span>
+                </div>
+                <div class="summary-row">
+                  <span>Total (NGN):</span>
+                  <span id="cryptoTotal">&#8358;0</span>
+                </div>
+              </div>
+
+              <button class="btn btn-primary" id="cryptoTradeBtn" onclick="executeCryptoTrade()">
+                Buy Crypto
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Your Holdings</h3>
+            <div class="holdings-list" id="holdingsList">
+              <p class="text-muted">No crypto holdings yet</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Crypto Rates with Coin Logos -->
+        <div class="card mt-4">
+          <h3>Live Crypto Rates</h3>
+          <div class="crypto-rates" id="cryptoRates">
+            <!-- Populated by JS with coin logos -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Gift Cards Section -->
+      <section class="content-section" id="giftcards-section">
+
+        <!-- Step 1: Landing - Trade Type Selection -->
+        <div id="gc-step-landing" class="gc-step">
+          <div class="section-back">
+            <button class="back-btn" onclick="showSection('overview')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Back
+            </button>
+          </div>
+          <h1>Gift Cards</h1>
+          <p class="text-muted">Buy and sell gift cards from popular brands</p>
+          <div class="gc-option-cards">
+            <div class="gc-option-card" onclick="gcSelectTradeType('sell')">
+              <div class="gc-option-icon gc-option-sell">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </div>
+              <div class="gc-option-title">Sell Giftcards</div>
+              <div class="gc-option-sub">Get instant Naira for your cards</div>
+              <div class="gc-option-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+            <div class="gc-option-card" onclick="gcSelectTradeType('buy')">
+              <div class="gc-option-icon gc-option-buy">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+              </div>
+              <div class="gc-option-title">Buy Giftcards</div>
+              <div class="gc-option-sub">Purchase gift cards with Naira</div>
+              <div class="gc-option-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Card Grid -->
+        <div id="gc-step-grid" class="gc-step" style="display:none;">
+          <div class="section-back">
+            <button class="back-btn" onclick="gcGoTo('landing')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Back
+            </button>
+          </div>
+          <h1 id="gc-grid-title">Select Gift Card</h1>
+          <p class="text-muted" id="gc-grid-subtitle">Choose a gift card to trade</p>
+          <div class="gc-search-wrap">
+            <svg class="gc-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="gc-search-input" id="gcSearchInput" placeholder="Search gift cards..." oninput="gcFilterGrid(this.value)">
+          </div>
+          <div class="gc-card-grid" id="gcCardGrid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Step 3: Trade Form -->
+        <div id="gc-step-form" class="gc-step" style="display:none;">
+          <div class="section-back">
+            <button class="back-btn" onclick="gcGoTo('grid')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              Back
+            </button>
+          </div>
+          <!-- Selected card header -->
+          <div class="gc-form-header">
+            <div class="gc-form-logo" id="gcFormLogo"></div>
+            <div>
+              <div class="gc-form-card-name" id="gcFormCardName"></div>
+              <div class="gc-form-trade-type" id="gcFormTradeType"></div>
+            </div>
+          </div>
+
+          <!-- Country chips -->
+          <div class="gc-country-row" id="gcCountryRow">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Sell form -->
+          <div id="gc-sell-form">
+            <div class="form-group mt-3">
+              <label>Card Range</label>
+              <select id="gcCardRange" onchange="gcUpdateSummary()">
+                <option value="">-- Select range --</option>
+                <option value="20-99">Credit Receipt $20 - $99</option>
+                <option value="100-199">Credit Receipt $100 - $199</option>
+                <option value="200-499">Credit Receipt $200 - $499</option>
+                <option value="500+">Credit Receipt $500+</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Receipt Category</label>
+              <div class="gc-receipt-chips">
+                <button class="gc-receipt-chip active" data-type="physical" onclick="gcSelectReceipt(this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                  Physical
+                </button>
+                <button class="gc-receipt-chip" data-type="ecode" onclick="gcSelectReceipt(this)">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                  Ecode
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Card Value (<span class="gc-currency-label">USD</span>)</label>
+              <input type="number" id="gcCardValue" placeholder="e.g. 100" min="1" oninput="gcUpdateSummary()">
+            </div>
+            <div class="form-group">
+              <label>Quantity</label>
+              <div class="gc-qty-row">
+                <button class="gc-qty-btn" onclick="gcChangeQty(-1)">&#8722;</button>
+                <span class="gc-qty-val" id="gcQtyDisplay">1</span>
+                <button class="gc-qty-btn" onclick="gcChangeQty(1)">&#43;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buy form -->
+          <div id="gc-buy-form" style="display:none;">
+            <div class="form-group mt-3">
+              <label>Amount (<span class="gc-currency-label">USD</span>)</label>
+              <input type="number" id="gcBuyAmount" placeholder="e.g. 50" min="1" oninput="gcUpdateSummary()">
+            </div>
+          </div>
+
+          <div class="trade-summary" id="gcTradeSummary">
+            <div class="summary-row">
+              <span>Card</span>
+              <span id="gcSumCard">—</span>
+            </div>
+            <div class="summary-row">
+              <span>Country</span>
+              <span id="gcSumCountry">—</span>
+            </div>
+            <div class="summary-row">
+              <span>Rate</span>
+              <span id="gcSumRate">₦0/<span class="gc-currency-label">USD</span></span>
+            </div>
+            <div class="summary-row">
+              <span>Total (NGN)</span>
+              <span id="gcSumTotal" style="font-weight:700; color:#10B981;">₦0</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" id="gcSubmitBtn" onclick="executeGiftcardTrade()" style="width:100%; margin-top:1.25rem;">
+            Submit Transaction
+          </button>
+        </div>
+
+        <!-- Country Other Modal (bottom sheet) -->
+        <div class="gc-sheet-backdrop" id="gcSheetBackdrop" onclick="gcCloseSheet()" style="display:none;"></div>
+        <div class="gc-bottom-sheet" id="gcBottomSheet" style="display:none;">
+          <div class="gc-sheet-handle"></div>
+          <h3 class="gc-sheet-title">Select Country</h3>
+          <div class="gc-sheet-search-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" class="gc-sheet-search" id="gcSheetSearch" placeholder="Search country..." oninput="gcFilterSheet(this.value)">
+          </div>
+          <div class="gc-sheet-list" id="gcSheetList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Bill Payments Section -->
+      <section class="content-section" id="bills-section">
+        <div class="section-back">
+          <button class="back-btn" onclick="showSection('overview')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+        <h1>Bill Payments</h1>
+        <p class="text-muted">Pay your bills instantly</p>
+
+        <div class="bill-categories">
+          <button class="bill-cat-btn active" data-category="airtime">Airtime</button>
+          <button class="bill-cat-btn" data-category="data">Data</button>
+          <button class="bill-cat-btn" data-category="electricity">Electricity</button>
+          <button class="bill-cat-btn" data-category="cable">Cable TV</button>
+        </div>
+
+        <div class="card mt-4">
+          <!-- Airtime Form -->
+          <div class="bill-form active" id="airtime-form">
+            <h3>Buy Airtime</h3>
+            <div class="form-group">
+              <label>Network Provider</label>
+              <select id="airtimeProvider">
+                <option value="">-- Select provider --</option>
+                <option value="MTN">MTN</option>
+                <option value="Airtel">Airtel</option>
+                <option value="Glo">Glo</option>
+                <option value="9Mobile">9Mobile</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="airtimePhone" placeholder="Enter phone number">
+            </div>
+            <div class="form-group">
+              <label>Amount</label>
+              <input type="number" id="airtimeAmount" placeholder="Enter amount" min="50">
+            </div>
+            <button class="btn btn-primary" onclick="payBill('airtime')">Buy Airtime</button>
+          </div>
+
+          <!-- Data Form -->
+          <div class="bill-form" id="data-form">
+            <h3>Buy Data</h3>
+            <div class="form-group">
+              <label>Network Provider</label>
+              <select id="dataProvider" onchange="loadDataPlans()">
+                <option value="">-- Select provider --</option>
+                <option value="MTN">MTN</option>
+                <option value="Airtel">Airtel</option>
+                <option value="Glo">Glo</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data Plan</label>
+              <select id="dataPlan">
+                <option value="">-- Select plan --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" id="dataPhone" placeholder="Enter phone number">
+            </div>
+            <button class="btn btn-primary" onclick="payBill('data')">Buy Data</button>
+          </div>
+
+          <!-- Electricity Form -->
+          <div class="bill-form" id="electricity-form">
+            <h3>Pay Electricity Bill</h3>
+            <div class="form-group">
+              <label>Distribution Company</label>
+              <select id="electricityProvider">
+                <option value="">-- Select provider --</option>
+                <option value="Eko Electricity">Eko Electricity (EKEDC)</option>
+                <option value="Ikeja Electricity">Ikeja Electricity (IKEDC)</option>
+                <option value="Abuja Electricity">Abuja Electricity (AEDC)</option>
+                <option value="Ibadan Electricity">Ibadan Electricity (IBEDC)</option>
+                <option value="Port Harcourt Electricity">Port Harcourt (PHED)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Meter Number</label>
+              <input type="text" id="meterNumber" placeholder="Enter meter number">
+            </div>
+            <div class="form-group">
+              <label>Amount</label>
+              <input type="number" id="electricityAmount" placeholder="Enter amount" min="1000">
+            </div>
+            <button class="btn btn-primary" onclick="payBill('electricity')">Pay Bill</button>
+          </div>
+
+          <!-- Cable Form -->
+          <div class="bill-form" id="cable-form">
+            <h3>Pay Cable TV</h3>
+            <div class="form-group">
+              <label>Cable Provider</label>
+              <select id="cableProvider" onchange="loadCablePackages()">
+                <option value="">-- Select provider --</option>
+                <option value="DSTV">DSTV</option>
+                <option value="GOtv">GOtv</option>
+                <option value="StarTimes">StarTimes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Package</label>
+              <select id="cablePackage">
+                <option value="">-- Select package --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Smart Card / IUC Number</label>
+              <input type="text" id="smartcardNumber" placeholder="Enter smartcard number">
+            </div>
+            <button class="btn btn-primary" onclick="payBill('cable')">Pay Subscription</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Social Media Marketplace Section -->
+      <section class="content-section" id="social-section">
+        <div class="section-back">
+          <button class="back-btn" onclick="showSection('overview')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+        <h1>Social Media Marketplace</h1>
+        <p class="text-muted">Buy verified social media accounts</p>
+
+        <div class="filter-bar">
+          <select id="socialFilter" onchange="filterSocialAccounts()">
+            <option value="">All Platforms</option>
+            <option value="Instagram">Instagram</option>
+            <option value="Twitter">Twitter</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Facebook">Facebook</option>
+            <option value="YouTube">YouTube</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="Snapchat">Snapchat</option>
+          </select>
+        </div>
+
+        <div class="social-accounts-grid" id="socialAccountsGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Purchased Accounts -->
+        <div class="card mt-4">
+          <h3>My Purchased Accounts</h3>
+          <div class="purchased-list" id="purchasedAccounts">
+            <p class="text-muted">No purchased accounts yet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Virtual Numbers Section (Enhanced with Service filter) -->
+      <section class="content-section" id="numbers-section">
+        <div class="section-back">
+          <button class="back-btn" onclick="showSection('overview')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+        <h1>Virtual Foreign Numbers</h1>
+        <p class="text-muted">Get virtual phone numbers for verification</p>
+
+        <div class="filter-bar-dual">
+          <div class="filter-group">
+            <label class="filter-label">Country</label>
+            <select id="countryFilter" onchange="filterNumbers()">
+              <option value="">All Countries</option>
+              <option value="USA">United States</option>
+              <option value="UK">United Kingdom</option>
+              <option value="Canada">Canada</option>
+              <option value="Germany">Germany</option>
+              <option value="France">France</option>
+              <option value="Australia">Australia</option>
+              <option value="India">India</option>
+              <option value="Netherlands">Netherlands</option>
+              <option value="Brazil">Brazil</option>
+              <option value="Russia">Russia</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Service</label>
+            <select id="serviceFilter" onchange="filterNumbers()">
+              <option value="">All Services</option>
+              <option value="Telegram">Telegram</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Reddit">Reddit</option>
+              <option value="Twitter">Twitter / X</option>
+              <option value="Instagram">Instagram</option>
+              <option value="Facebook">Facebook</option>
+              <option value="TikTok">TikTok</option>
+              <option value="Google">Google</option>
+              <option value="Discord">Discord</option>
+              <option value="Snapchat">Snapchat</option>
+              <option value="Signal">Signal</option>
+              <option value="Viber">Viber</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="numbers-grid" id="numbersGrid">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- My Numbers -->
+        <div class="card mt-4">
+          <h3>My Virtual Numbers</h3>
+          <div class="my-numbers-list" id="myNumbersList">
+            <p class="text-muted">No virtual numbers yet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Transactions Section -->
+      <section class="content-section" id="transactions-section">
+        <h1>Transaction History</h1>
+        <p class="text-muted">View all your transactions</p>
+
+        <div class="card">
+          <div class="transactions-full" id="allTransactions">
+            <p class="text-muted">No transactions yet</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- KYC Section -->
+      <section class="content-section" id="kyc-section">
+        <h1>KYC Verification</h1>
+        <p class="text-muted">Complete your identity verification to unlock all features</p>
+
+        <!-- KYC Status Card -->
+        <div class="card mt-4" id="kycStatusCard">
+          <div class="kyc-status-container">
+            <div class="kyc-status-icon" id="kycStatusIcon">&#128100;</div>
+            <div class="kyc-status-info">
+              <h3 id="kycStatusTitle">KYC Status</h3>
+              <p id="kycStatusText" class="text-muted">Loading...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- KYC Form (Step 1: NIN & BVN) -->
+        <div class="card mt-4" id="kycFormCard" style="display: none;">
+          <h3>Identity Verification</h3>
+          <p class="text-muted">Please provide your NIN and BVN for verification</p>
+
+          <form id="kycForm" class="kyc-form" onsubmit="event.preventDefault(); submitKyc();">
+            <div class="form-group">
+              <label for="ninInput">National Identification Number (NIN)</label>
+              <input type="text" id="ninInput" placeholder="Enter your 11-digit NIN" maxlength="11" pattern="\d{11}" inputmode="numeric" required>
+              <span class="input-hint">Your NIN is an 11-digit number</span>
+            </div>
+
+            <div class="form-group">
+              <label for="bvnInput">Bank Verification Number (BVN)</label>
+              <input type="text" id="bvnInput" placeholder="Enter your 11-digit BVN" maxlength="11" pattern="\d{11}" inputmode="numeric" required>
+              <span class="input-hint">Your BVN is an 11-digit number</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              Next: Set Transaction PIN
+            </button>
+          </form>
+        </div>
+
+        <!-- KYC Form (Step 2: Transaction PIN) -->
+        <div class="card mt-4" id="pinSetupCard" style="display: none;">
+          <h3>Set Transaction PIN</h3>
+          <p class="text-muted">Create a 4-digit PIN for securing your transactions</p>
+
+          <form id="pinSetupForm" class="kyc-form" onsubmit="event.preventDefault(); setupPin();">
+            <div class="form-group">
+              <label for="newPinInput">Enter 4-Digit PIN</label>
+              <div class="pin-input-container">
+                <input type="password" id="pinDigit1" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                <input type="password" id="pinDigit2" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                <input type="password" id="pinDigit3" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                <input type="password" id="pinDigit4" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Confirm PIN</label>
+              <div class="pin-input-container">
+                <input type="password" id="confirmPinDigit1" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                <input type="password" id="confirmPinDigit2" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                <input type="password" id="confirmPinDigit3" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                <input type="password" id="confirmPinDigit4" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+              Complete KYC Verification
+            </button>
+          </form>
+        </div>
+
+        <!-- KYC Completed Card -->
+        <div class="card mt-4" id="kycCompletedCard" style="display: none;">
+          <div class="kyc-completed">
+            <div class="kyc-success-icon">&#10003;</div>
+            <h3>KYC Verification Completed</h3>
+            <p class="text-muted">Your identity has been verified. You now have full access to all features.</p>
+            <div class="kyc-verified-badge">
+              <span>&#9989;</span> Verified Account
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQs Section -->
+      <section class="content-section" id="faqs-section">
+        <div class="section-back">
+          <button class="back-btn" onclick="showSection('settings')">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+        </div>
+        <h1>FAQs</h1>
+        <p class="text-muted">Find answers to common questions</p>
+
+        <div class="faq-container" id="faqContainer">
+          <div class="card mt-4 faq-card">
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>What is Bittrixpay?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>Bittrixpay is an all-in-one financial platform that allows you to trade cryptocurrencies, buy and sell gift cards, pay bills, purchase social media accounts, and get virtual numbers — all from one convenient app.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>How do I fund my wallet?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>You can fund your wallet by tapping the "Fund Wallet" button on the home screen. You can fund via bank transfer to your dedicated account number, or use other supported payment methods.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>How do I buy or sell cryptocurrency?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>Navigate to the Crypto section from the home screen. Select Buy or Sell, choose your preferred cryptocurrency, enter the amount, and confirm the transaction with your PIN.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>How do I trade gift cards?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>Go to the Gift Cards section, choose Buy or Sell, select the gift card brand, enter the card value in USD, and complete the trade. Rates are displayed in real-time for transparency.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>Is my account secure?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>Yes! We use industry-standard encryption and security measures. You can also enable two-factor authentication (2FA), set a transaction PIN, and use biometric login for extra security.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>What is KYC and why do I need it?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>KYC (Know Your Customer) is a verification process required by financial regulations. Completing KYC allows you to access higher transaction limits and all platform features. You'll need to submit your NIN or BVN.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>How do I pay bills?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>Go to the Bills section from the home screen. Choose your bill category (Airtime, Data, Electricity, Cable TV), select a provider, enter the required details, and confirm payment with your PIN.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>How do I contact support?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>You can reach us through the Help Center in the Profile page. Use Live Chat for instant support, or email us at bittrixservices001@gmail.com. We typically respond within 24 hours.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>What are the transaction fees?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>Transaction fees vary by service. Crypto trades have a small percentage fee included in the rate. Gift card trades and bill payments may include nominal processing fees. All fees are shown before you confirm any transaction.</p>
+              </div>
+            </div>
+            <div class="faq-item" onclick="toggleFAQ(this)">
+              <div class="faq-question">
+                <span>How does the referral program work?</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              <div class="faq-answer">
+                <p>Share your unique referral code with friends. When they sign up and complete their first transaction, you both earn &#8358;500 credited to your wallets. Find your referral code in the Profile page under "Refer &amp; Earn".</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Enhanced Profile & Settings Section -->
+      <section class="content-section" id="settings-section">
+        <h1>Profile</h1>
+        <p class="text-muted">Manage your account settings</p>
+
+        <!-- Profile Info Card -->
+        <div class="card mt-4 profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">
+              <span id="profileInitials">U</span>
+            </div>
+            <div class="profile-name-section">
+              <h3 id="profileFullname">-</h3>
+              <p class="text-muted" id="profileEmail">-</p>
+            </div>
+            <button class="profile-edit-btn" id="profileEditBtn" onclick="toggleProfileEdit()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+          <div class="profile-info-grid">
+            <div class="profile-info-item">
+              <div class="profile-info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              </div>
+              <div>
+                <div class="profile-info-label">Full Name</div>
+                <div class="profile-info-value" id="settingsFullname">-</div>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <div class="profile-info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <div class="profile-info-label">Email</div>
+                <div class="profile-info-value" id="settingsEmail">-</div>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <div class="profile-info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+              <div>
+                <div class="profile-info-label">Phone</div>
+                <div class="profile-info-value" id="settingsPhone">-</div>
+              </div>
+            </div>
+            <div class="profile-info-item">
+              <div class="profile-info-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <div>
+                <div class="profile-info-label">Member Since</div>
+                <div class="profile-info-value" id="settingsMemberSince">-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theme Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+            <h3>Appearance</h3>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Dark Mode</span>
+              <span class="settings-item-desc">Switch between light and dark theme</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Notifications Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <h3>Notifications</h3>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Push Notifications</span>
+              <span class="settings-item-desc">Get notified about transactions</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="pushNotifToggle" checked onchange="saveNotificationSettings()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Email Notifications</span>
+              <span class="settings-item-desc">Receive transaction summaries via email</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailNotifToggle" checked onchange="saveNotificationSettings()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <span class="settings-item-title">SMS Alerts</span>
+              <span class="settings-item-desc">Get SMS for important account activity</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="smsNotifToggle" onchange="saveNotificationSettings()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Account Verification Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon verified-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <h3>Account Verification</h3>
+          </div>
+          <div class="verification-status" id="verificationStatus">
+            <div class="verification-badge" id="verificationBadge">
+              <span class="verification-dot pending"></span>
+              <span id="verificationText">Not Verified</span>
+            </div>
+            <button class="btn btn-sm btn-primary" id="verifyNowBtn" onclick="showSection('kyc')">Verify Now</button>
+          </div>
+          <div class="verification-steps">
+            <div class="verification-step" id="vStep1">
+              <div class="step-check">1</div>
+              <span>NIN/BVN Submitted</span>
+            </div>
+            <div class="verification-step" id="vStep2">
+              <div class="step-check">2</div>
+              <span>Transaction PIN Set</span>
+            </div>
+            <div class="verification-step" id="vStep3">
+              <div class="step-check">3</div>
+              <span>Account Verified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bank Account Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/></svg>
+            </div>
+            <h3>Bank Accounts</h3>
+          </div>
+          <div class="bank-accounts-list" id="bankAccountsList">
+            <p class="text-muted" style="font-size:0.85rem;">No bank accounts added yet</p>
+          </div>
+          <button class="btn btn-outline btn-sm" style="width:100%;margin-top:0.75rem;" onclick="showAddBankModal()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Bank Account
+          </button>
+        </div>
+
+        <!-- Security Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3>Security</h3>
+          </div>
+          <div class="settings-item clickable" onclick="toggleResetPin()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Change Transaction PIN</span>
+              <span class="settings-item-desc">Update your 4-digit transaction PIN</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon" id="pinChevron"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <!-- Reset PIN form (collapsible) -->
+          <div class="collapsible-content" id="resetPinSection" style="display:none;">
+            <form id="resetPinForm" class="kyc-form" onsubmit="event.preventDefault(); resetTransactionPin();">
+              <div class="form-group">
+                <label for="currentPinInput">Current PIN</label>
+                <div class="pin-input-container">
+                  <input type="password" id="currentPin1" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="currentPin2" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="currentPin3" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="currentPin4" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>New PIN</label>
+                <div class="pin-input-container">
+                  <input type="password" id="resetNewPin1" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="resetNewPin2" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="resetNewPin3" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="resetNewPin4" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Confirm New PIN</label>
+                <div class="pin-input-container">
+                  <input type="password" id="resetConfirmPin1" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="resetConfirmPin2" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="resetConfirmPin3" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                  <input type="password" id="resetConfirmPin4" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Update PIN</button>
+            </form>
+          </div>
+          <div class="settings-item clickable" onclick="toggleChangePassword()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Change Password</span>
+              <span class="settings-item-desc">Update your login password</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon" id="passwordChevron"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <!-- Change Password form (collapsible) -->
+          <div class="collapsible-content" id="changePasswordSection" style="display:none;">
+            <form id="changePasswordForm" class="kyc-form" onsubmit="event.preventDefault(); changePassword();">
+              <div class="form-group">
+                <label>Current Password</label>
+                <input type="password" id="currentPassword" placeholder="Enter current password" required>
+              </div>
+              <div class="form-group">
+                <label>New Password</label>
+                <input type="password" id="newPassword" placeholder="Enter new password" minlength="6" required>
+              </div>
+              <div class="form-group">
+                <label>Confirm New Password</label>
+                <input type="password" id="confirmNewPassword" placeholder="Confirm new password" required>
+              </div>
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Update Password</button>
+            </form>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Biometric Login</span>
+              <span class="settings-item-desc">Use fingerprint or face to login</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="biometricToggle" onchange="saveBiometricSetting()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Two-Factor Authentication Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon" style="color: #10B981;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Two-Factor Authentication</h3>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Enable 2FA</span>
+              <span class="settings-item-desc">Add an extra layer of security to your account</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="twoFAToggle" onchange="toggle2FA()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="collapsible-content" id="twoFASetupSection" style="display:none;">
+            <div class="twofa-setup">
+              <div class="twofa-step" id="twoFAStep1">
+                <p style="font-size:0.85rem; margin-bottom:0.75rem;">Scan the QR code below with your authenticator app (Google Authenticator, Authy, etc.)</p>
+                <div class="twofa-qr-container" id="twoFAQRCode">
+                  <div class="twofa-qr-placeholder">
+                    <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                      <rect width="120" height="120" rx="8" fill="#1A1A1A"/>
+                      <rect x="15" y="15" width="30" height="30" rx="2" fill="#fff"/>
+                      <rect x="20" y="20" width="20" height="20" rx="1" fill="#1A1A1A"/>
+                      <rect x="25" y="25" width="10" height="10" fill="#fff"/>
+                      <rect x="75" y="15" width="30" height="30" rx="2" fill="#fff"/>
+                      <rect x="80" y="20" width="20" height="20" rx="1" fill="#1A1A1A"/>
+                      <rect x="85" y="25" width="10" height="10" fill="#fff"/>
+                      <rect x="15" y="75" width="30" height="30" rx="2" fill="#fff"/>
+                      <rect x="20" y="80" width="20" height="20" rx="1" fill="#1A1A1A"/>
+                      <rect x="25" y="85" width="10" height="10" fill="#fff"/>
+                      <rect x="50" y="15" width="8" height="8" fill="#fff"/>
+                      <rect x="50" y="30" width="8" height="8" fill="#fff"/>
+                      <rect x="50" y="50" width="8" height="8" fill="#fff"/>
+                      <rect x="60" y="50" width="8" height="8" fill="#fff"/>
+                      <rect x="75" y="50" width="8" height="8" fill="#fff"/>
+                      <rect x="50" y="75" width="8" height="8" fill="#fff"/>
+                      <rect x="60" y="60" width="8" height="8" fill="#fff"/>
+                      <rect x="75" y="60" width="8" height="8" fill="#fff"/>
+                      <rect x="90" y="55" width="8" height="8" fill="#fff"/>
+                      <rect x="60" y="85" width="8" height="8" fill="#fff"/>
+                      <rect x="75" y="75" width="8" height="8" fill="#fff"/>
+                      <rect x="90" y="90" width="8" height="8" fill="#fff"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="twofa-manual-key">
+                  <span class="settings-item-desc">Or enter this key manually:</span>
+                  <div class="referral-code-row" style="margin-top:0.5rem;">
+                    <span class="referral-code" id="twoFAManualKey" style="font-size:0.75rem; letter-spacing:2px;">BTRX-XXXX-XXXX-XXXX</span>
+                    <button class="copy-btn" onclick="copy2FAKey()">Copy</button>
+                  </div>
+                </div>
+                <div class="form-group" style="margin-top:1rem;">
+                  <label style="font-size:0.85rem;">Enter 6-digit verification code</label>
+                  <div class="pin-input-container" style="justify-content:center;">
+                    <input type="text" id="twoFA1" class="pin-digit" maxlength="1" inputmode="numeric">
+                    <input type="text" id="twoFA2" class="pin-digit" maxlength="1" inputmode="numeric">
+                    <input type="text" id="twoFA3" class="pin-digit" maxlength="1" inputmode="numeric">
+                    <input type="text" id="twoFA4" class="pin-digit" maxlength="1" inputmode="numeric">
+                    <input type="text" id="twoFA5" class="pin-digit" maxlength="1" inputmode="numeric">
+                    <input type="text" id="twoFA6" class="pin-digit" maxlength="1" inputmode="numeric">
+                  </div>
+                </div>
+                <button class="btn btn-primary" style="width:100%; margin-top:0.75rem;" onclick="verify2FACode()">Verify &amp; Enable 2FA</button>
+              </div>
+              <div class="twofa-step" id="twoFAStep2" style="display:none;">
+                <div style="text-align:center; padding:1rem 0;">
+                  <div style="width:48px;height:48px;border-radius:50%;background:#10B981;display:inline-flex;align-items:center;justify-content:center;margin-bottom:0.75rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 style="color:#10B981;">2FA Enabled!</h3>
+                  <p class="text-muted" style="font-size:0.8rem; margin-top:0.5rem;">Save these backup codes in a safe place. You can use them to access your account if you lose your authenticator device.</p>
+                </div>
+                <div class="backup-codes-grid" id="backupCodesGrid">
+                  <!-- Populated by JS -->
+                </div>
+                <button class="btn btn-outline btn-sm" style="width:100%; margin-top:0.75rem;" onclick="copyBackupCodes()">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  Copy Backup Codes
+                </button>
+                <button class="btn btn-primary" style="width:100%; margin-top:0.5rem;" onclick="finish2FASetup()">Done</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Device Management Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon" style="color: #3B82F6;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+            </div>
+            <h3>Device Management</h3>
+          </div>
+          <div class="device-list" id="deviceList">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+        <!-- Privacy & Policy Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon" style="color: #8B5CF6;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <h3>Privacy &amp; Policy</h3>
+          </div>
+          <div class="settings-item clickable" onclick="showPrivacyPolicy()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Privacy Policy</span>
+              <span class="settings-item-desc">How we collect and use your data</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="settings-item clickable" onclick="showTermsOfService()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Terms of Service</span>
+              <span class="settings-item-desc">Rules and conditions for using Bittrixpay</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="settings-item clickable" onclick="showDataPolicy()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Data Retention Policy</span>
+              <span class="settings-item-desc">How long we store your information</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- About the App Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon" style="color: #F59E0B;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </div>
+            <h3>About Bittrixpay</h3>
+          </div>
+          <div class="about-app-content">
+            <div class="about-app-logo">
+              <img src="logo.jpeg" alt="Bittrixpay" style="width:56px;height:56px;border-radius:12px;">
+              <div style="margin-left:0.75rem;">
+                <h4 style="font-size:0.95rem; margin:0;">Bittrixpay</h4>
+                <span class="text-muted" style="font-size:0.75rem;">Version 1.0.0</span>
+              </div>
+            </div>
+            <p class="text-muted" style="font-size:0.8rem; margin-top:0.75rem; line-height:1.5;">
+              Bittrixpay is your all-in-one platform for cryptocurrency trading, gift card exchange, bill payments, and more. Trade securely and conveniently from anywhere.
+            </p>
+            <div class="about-links">
+              <div class="settings-item clickable" onclick="showToast('Checking for updates...', 'info')">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Check for Updates</span>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+              <div class="settings-item clickable" onclick="showLicenses()">
+                <div class="settings-item-info">
+                  <span class="settings-item-title">Open Source Licenses</span>
+                </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+              </div>
+            </div>
+            <p class="text-muted" style="font-size:0.7rem; text-align:center; margin-top:0.75rem;">&copy; 2025 Bittrixpay Technologies. All rights reserved.</p>
+          </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon" style="color: #3B82F6;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><circle cx="12" cy="2" r="1"/></svg>
+            </div>
+            <h3>Follow Us</h3>
+          </div>
+          <div class="social-media-links">
+            <a href="https://www.instagram.com/bittrixpay1?igsh=MXE5bXoxaXVxcnZpcA%3D%3D&utm_source=qr" target="_blank" rel="noopener" class="social-link-item">
+              <div class="social-link-icon instagram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>
+              </div>
+              <div class="social-link-info">
+                <span class="social-link-name">Instagram</span>
+                <span class="social-link-handle">@bittrixpay1</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@bittrix_pay1" target="_blank" rel="noopener" class="social-link-item">
+              <div class="social-link-icon tiktok">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 0 0-.79-.05A6.34 6.34 0 0 0 3.15 15a6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.34-6.34V8.98a8.2 8.2 0 0 0 4.76 1.52V7.05a4.84 4.84 0 0 1-1-.36z"/></svg>
+              </div>
+              <div class="social-link-info">
+                <span class="social-link-name">TikTok</span>
+                <span class="social-link-handle">@bittrix_pay1</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+            <a href="https://t.me/bittrixpay1_app" target="_blank" rel="noopener" class="social-link-item">
+              <div class="social-link-icon telegram">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              </div>
+              <div class="social-link-info">
+                <span class="social-link-name">Telegram</span>
+                <span class="social-link-handle">@bittrixpay1_app</span>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Help Center Section -->
+        <div class="card mt-4 settings-card">
+          <div class="settings-card-header">
+            <div class="settings-icon" style="color: #EC4899;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <h3>Help Center</h3>
+          </div>
+          <div class="settings-item clickable" onclick="openLiveChat()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Live Chat Support</span>
+              <span class="settings-item-desc">Chat with our support team</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="settings-item clickable" onclick="openEmailSupport()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Email Support</span>
+              <span class="settings-item-desc">bittrixservices001@gmail.com</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="settings-item clickable" onclick="showSection('faqs')">
+            <div class="settings-item-info">
+              <span class="settings-item-title">FAQs</span>
+              <span class="settings-item-desc">Frequently asked questions</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+          <div class="settings-item clickable" onclick="reportBug()">
+            <div class="settings-item-info">
+              <span class="settings-item-title">Report a Problem</span>
+              <span class="settings-item-desc">Let us know if something isn't working</span>
+            </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="chevron-icon"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+
+        <!-- Refer and Earn Section -->
+        <div class="card mt-4 settings-card referral-card">
+          <div class="settings-card-header">
+            <div class="settings-icon referral-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Refer &amp; Earn</h3>
+          </div>
+          <div class="referral-content">
+            <p class="referral-desc">Invite friends and earn &#8358;500 for each successful referral!</p>
+            <div class="referral-code-box">
+              <span class="referral-label">Your Referral Code</span>
+              <div class="referral-code-row">
+                <span class="referral-code" id="referralCode">LOADING...</span>
+                <button class="copy-btn" onclick="copyReferralCode()">Copy</button>
+              </div>
+            </div>
+            <div class="referral-stats">
+              <div class="referral-stat">
+                <span class="referral-stat-value" id="referralCount">0</span>
+                <span class="referral-stat-label">Referrals</span>
+              </div>
+              <div class="referral-stat">
+                <span class="referral-stat-value" id="referralEarnings">&#8358;0</span>
+                <span class="referral-stat-label">Earnings</span>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" onclick="shareReferralCode()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              Share Referral Link
+            </button>
+          </div>
+        </div>
+
+        <!-- Logout -->
+        <div class="card mt-4" style="text-align: center;">
+          <button class="btn btn-outline btn-logout" onclick="logout()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Logout
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav" id="bottomNav">
+    <button class="nav-tab active" data-section="overview">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span>Home</span>
+    </button>
+    <button class="nav-tab" data-section="transactions">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+      <span>History</span>
+    </button>
+    <button class="nav-tab" data-section="kyc">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+      <span>KYC</span>
+    </button>
+    <button class="nav-tab" data-section="settings">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Profile</span>
+    </button>
+  </nav>
+
+  <!-- Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Title</h3>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Fund Account Modal -->
+  <div class="modal" id="fundModal">
+    <div class="modal-content" style="max-width: 550px;">
+      <div class="modal-header">
+        <h3>Fund Your Account</h3>
+        <button class="modal-close" onclick="closeFundModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <!-- Bank Details -->
+        <div class="bank-details">
+          <h4>Transfer to this account</h4>
+          <div class="bank-info">
+            <div class="bank-row">
+              <span class="bank-label">Bank Name</span>
+              <span class="bank-value">Wema Bank</span>
+            </div>
+            <div class="bank-row">
+              <span class="bank-label">Account Number</span>
+              <span class="bank-value" id="bankAccountNumber">8267024578</span>
+              <button class="copy-btn" onclick="copyAccountNumber()">Copy</button>
+            </div>
+            <div class="bank-row">
+              <span class="bank-label">Account Name</span>
+              <span class="bank-value">BITTRIXPAY LTD</span>
+            </div>
+          </div>
+          <p class="bank-note">Transfer the exact amount you want to fund, then upload your receipt below.</p>
+        </div>
+
+        <!-- Fund Form -->
+        <form id="fundForm" class="fund-upload-form">
+          <div class="form-group">
+            <label for="fundAmountInput">Amount Transferred (NGN)</label>
+            <input type="number" id="fundAmountInput" placeholder="Enter amount you transferred" min="1000" required>
+          </div>
+
+          <div class="form-group">
+            <label>Upload Payment Receipt</label>
+            <div class="upload-area" id="uploadArea">
+              <input type="file" id="receiptFile" accept="image/*" hidden>
+              <div class="upload-placeholder" id="uploadPlaceholder">
+                <span class="upload-icon">&#128247;</span>
+                <p>Click to upload receipt</p>
+                <span class="upload-hint">JPG, PNG or PDF (Max 5MB)</span>
+              </div>
+              <div class="upload-preview" id="uploadPreview" style="display: none;">
+                <img id="previewImage" src="" alt="Receipt preview">
+                <button type="button" class="remove-image" onclick="removeImage()">&times;</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%;">
+            Submit for Verification
+          </button>
+        </form>
+
+        <p class="fund-disclaimer">Your account will be credited within 1-5 minutes after verification.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN Verification Modal -->
+  <div class="modal" id="pinModal">
+    <div class="modal-content" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3>Enter Transaction PIN</h3>
+        <button class="modal-close" onclick="closePinModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-muted text-center">Enter your 4-digit PIN to confirm this transaction</p>
+        <form id="pinVerifyForm" onsubmit="event.preventDefault(); verifyTransactionPin();">
+          <div class="pin-input-container" style="justify-content: center; margin: 1.5rem 0;">
+            <input type="password" id="verifyPin1" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+            <input type="password" id="verifyPin2" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+            <input type="password" id="verifyPin3" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+            <input type="password" id="verifyPin4" class="pin-digit" maxlength="1" pattern="\d" inputmode="numeric" required>
+          </div>
+          <p class="pin-error text-center" id="pinError" style="display: none; color: #EF4444;"></p>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Confirm</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Bank Account Modal -->
+  <div class="modal" id="bankModal">
+    <div class="modal-content" style="max-width: 450px;">
+      <div class="modal-header">
+        <h3>Add Bank Account</h3>
+        <button class="modal-close" onclick="closeBankModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="addBankForm" onsubmit="event.preventDefault(); addBankAccount();">
+          <div class="form-group">
+            <label>Bank Name</label>
+            <select id="bankNameSelect" required>
+              <option value="">-- Select Bank --</option>
+              <option value="Access Bank">Access Bank</option>
+              <option value="GTBank">Guaranty Trust Bank</option>
+              <option value="First Bank">First Bank</option>
+              <option value="UBA">United Bank for Africa</option>
+              <option value="Zenith Bank">Zenith Bank</option>
+              <option value="Wema Bank">Wema Bank</option>
+              <option value="Fidelity Bank">Fidelity Bank</option>
+              <option value="Sterling Bank">Sterling Bank</option>
+              <option value="Polaris Bank">Polaris Bank</option>
+              <option value="Stanbic IBTC">Stanbic IBTC</option>
+              <option value="Union Bank">Union Bank</option>
+              <option value="Ecobank">Ecobank</option>
+              <option value="FCMB">FCMB</option>
+              <option value="Keystone Bank">Keystone Bank</option>
+              <option value="Kuda Bank">Kuda Bank</option>
+              <option value="Opay">Opay</option>
+              <option value="Palmpay">Palmpay</option>
+              <option value="Moniepoint">Moniepoint</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Account Number</label>
+            <input type="text" id="bankAccNumber" placeholder="Enter 10-digit account number" maxlength="10" pattern="\d{10}" inputmode="numeric" required>
+          </div>
+          <div class="form-group">
+            <label>Account Name</label>
+            <input type="text" id="bankAccName" placeholder="Enter account holder name" required>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;">Save Bank Account</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app-database.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

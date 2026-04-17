@@ -1,0 +1,10 @@
+node_modules/
+gradle-temp/
+gradle-8.6/
+.idea/
+tmpclaude-*
+nul
+bittrixpay.db
+*.db
+.env
+.claude/

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rate Calculator - BITTRIXPAY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <nav class="nav">
+        <a href="index.html" class="logo">
+          <img src="logo.jpeg" alt="BITTRIXPAY" class="logo-icon">
+          BITTRIXPAY
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="products.html">Products</a></li>
+          <li><a href="rate-calculator.html" class="active">Rate Calculator</a></li>
+          <li><a href="#faq">FAQs</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <a href="login.html" class="btn btn-outline" style="padding: 0.5rem 1rem;">Login</a>
+          <a href="register.html" class="btn btn-primary" style="padding: 0.5rem 1rem;">Sign Up</a>
+          <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+            <span id="themeIcon">&#9790;</span>
+          </button>
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Hero -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="page-hero-content">
+        <h1><span class="text-gradient">Rate</span> Calculator</h1>
+        <p>Check the current rates of different cryptocurrencies and gift cards in your local currency. Get accurate, real-time pricing before you trade.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Calculator Section -->
+  <section class="calculator-section">
+    <div class="container">
+      <div class="calculator-container">
+        <!-- Tabs -->
+        <div class="calculator-tabs">
+          <button class="tab-btn active" data-tab="giftcards" id="giftcardsTab">Gift Cards</button>
+          <button class="tab-btn" data-tab="crypto" id="cryptoTab">Crypto</button>
+        </div>
+
+        <!-- Gift Cards Calculator -->
+        <div id="giftcardsForm" class="calculator-form">
+          <div class="form-group">
+            <label for="giftcardType">Select Gift Card</label>
+            <select id="giftcardType">
+              <option value="">-- Choose a gift card --</option>
+              <option value="amazon" data-rate="1450">Amazon</option>
+              <option value="itunes" data-rate="1380">iTunes</option>
+              <option value="google" data-rate="1400">Google Play</option>
+              <option value="steam" data-rate="1350">Steam</option>
+              <option value="ebay" data-rate="1320">eBay</option>
+              <option value="walmart" data-rate="1300">Walmart</option>
+              <option value="nike" data-rate="1280">Nike</option>
+              <option value="netflix" data-rate="1420">Netflix</option>
+              <option value="spotify" data-rate="1390">Spotify</option>
+              <option value="xbox" data-rate="1360">Xbox</option>
+              <option value="playstation" data-rate="1370">PlayStation</option>
+              <option value="sephora" data-rate="1310">Sephora</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="giftcardAmount">Amount (USD)</label>
+            <input type="number" id="giftcardAmount" placeholder="Enter amount" min="1">
+          </div>
+
+          <div class="result-box">
+            <div class="result-label">You'll Receive</div>
+            <div class="result-value" id="giftcardResult">&#8358;0</div>
+          </div>
+
+          <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Get Started</a>
+
+          <p class="calculator-note">Amount calculated based on current rate. Rates may vary slightly at time of transaction.</p>
+        </div>
+
+        <!-- Crypto Calculator -->
+        <div id="cryptoForm" class="calculator-form" style="display: none;">
+          <div class="form-group">
+            <label for="cryptoType">Select Cryptocurrency</label>
+            <select id="cryptoType">
+              <option value="">-- Choose a cryptocurrency --</option>
+              <option value="btc" data-rate="68500000">Bitcoin (BTC)</option>
+              <option value="eth" data-rate="5200000">Ethereum (ETH)</option>
+              <option value="usdt" data-rate="1580">USDT (Tether)</option>
+              <option value="usdc" data-rate="1575">USDC</option>
+              <option value="bnb" data-rate="920000">Binance Coin (BNB)</option>
+              <option value="xrp" data-rate="850">Ripple (XRP)</option>
+              <option value="ada" data-rate="720">Cardano (ADA)</option>
+              <option value="doge" data-rate="220">Dogecoin (DOGE)</option>
+              <option value="sol" data-rate="285000">Solana (SOL)</option>
+              <option value="dot" data-rate="11500">Polkadot (DOT)</option>
+              <option value="ltc" data-rate="148000">Litecoin (LTC)</option>
+              <option value="link" data-rate="22500">Chainlink (LINK)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="cryptoAmount">Amount (Coins)</label>
+            <input type="number" id="cryptoAmount" placeholder="Enter amount" min="0.0001" step="0.0001">
+          </div>
+
+          <div class="result-box">
+            <div class="result-label">Value in Naira</div>
+            <div class="result-value" id="cryptoResult">&#8358;0</div>
+          </div>
+
+          <a href="#" class="btn btn-primary" style="width: 100%; text-align: center;">Start Trading</a>
+
+          <p class="calculator-note">Amount calculated based on current rate. Rates update in real-time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rate Info Section -->
+  <section class="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Why Our Rates Are Better</h2>
+        <p>BITTRIXPAY offers the most competitive rates in the market</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">&#128200;</div>
+          <h3>Real-Time Updates</h3>
+          <p>Our rates are updated every few seconds to reflect actual market conditions. What you see is what you get.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">&#128176;</div>
+          <h3>No Hidden Fees</h3>
+          <p>The rate you see includes everything. We don't surprise you with hidden charges or unexpected deductions.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">&#9889;</div>
+          <h3>Instant Processing</h3>
+          <p>Once you confirm your transaction, processing begins immediately. Most transactions complete within minutes.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">&#128274;</div>
+          <h3>Secure Transactions</h3>
+          <p>Every transaction is protected with bank-grade encryption. Your funds and data are always safe with us.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supported Cards -->
+  <section class="why-choose">
+    <div class="container">
+      <div class="section-header">
+        <h2>Supported Gift Cards</h2>
+        <p>We support a wide variety of popular gift cards from trusted brands</p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card" style="text-align: center;">
+          <h4>Shopping</h4>
+          <p style="color: var(--text-muted);">Amazon, eBay, Walmart, Target, Best Buy, Macy's</p>
+        </div>
+
+        <div class="feature-card" style="text-align: center;">
+          <h4>Entertainment</h4>
+          <p style="color: var(--text-muted);">iTunes, Google Play, Netflix, Spotify, Disney+, Hulu</p>
+        </div>
+
+        <div class="feature-card" style="text-align: center;">
+          <h4>Gaming</h4>
+          <p style="color: var(--text-muted);">Steam, Xbox, PlayStation, Nintendo, Roblox, Razer</p>
+        </div>
+
+        <div class="feature-card" style="text-align: center;">
+          <h4>Lifestyle</h4>
+          <p style="color: var(--text-muted);">Nike, Sephora, Nordstrom, Vanilla, Visa, Mastercard</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2>Ready to Trade at the Best Rates?</h2>
+      <p>Download BITTRIXPAY and start trading today. Join over 500,000+ satisfied users.</p>
+      <div class="app-buttons" style="justify-content: center; margin-top: 2rem;">
+        <a href="#" class="app-btn" style="background: white; color: #0F172A;">
+          <span class="app-btn-icon">&#63743;</span>
+          <div class="app-btn-text">
+            <small>Download on the</small>
+            <span>App Store</span>
+          </div>
+        </a>
+        <a href="#" class="app-btn" style="background: white; color: #0F172A;">
+          <span class="app-btn-icon">&#9654;</span>
+          <div class="app-btn-text">
+            <small>Get it on</small>
+            <span>Google Play</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <img src="logo.jpeg" alt="BITTRIXPAY" class="logo-icon">
+            BITTRIXPAY
+          </a>
+          <p>Your trusted partner for cryptocurrency trading and digital payments. Trade smarter, pay faster, live better.</p>
+          <div class="app-buttons">
+            <a href="#" class="app-btn">
+              <span class="app-btn-icon">&#63743;</span>
+              <div class="app-btn-text">
+                <small>App Store</small>
+              </div>
+            </a>
+            <a href="#" class="app-btn">
+              <span class="app-btn-icon">&#9654;</span>
+              <div class="app-btn-text">
+                <small>Google Play</small>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Products</h4>
+          <ul>
+            <li><a href="products.html">Buy & Sell Crypto</a></li>
+            <li><a href="products.html">Gift Cards</a></li>
+            <li><a href="products.html">Virtual Cards</a></li>
+            <li><a href="products.html">Bill Payments</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="rate-calculator.html">Rate Calculator</a></li>
+            <li><a href="#faq">FAQs</a></li>
+            <li><a href="#">Help Centre</a></li>
+            <li><a href="#">API Documentation</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">KYC/AML Policy</a></li>
+            <li><a href="#">Cookie Policy</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 BITTRIXPAY. All rights reserved.</p>
+        <div class="social-links">
+          <a href="#" class="social-link" aria-label="Twitter">&#120143;</a>
+          <a href="#" class="social-link" aria-label="Facebook">f</a>
+          <a href="#" class="social-link" aria-label="Instagram">&#128247;</a>
+          <a href="#" class="social-link" aria-label="LinkedIn">in</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Theme Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      body.classList.add('dark-mode');
+      themeIcon.innerHTML = '&#9728;';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+        themeIcon.innerHTML = '&#9728;';
+      } else {
+        localStorage.setItem('theme', 'light');
+        themeIcon.innerHTML = '&#9790;';
+      }
+    });
+
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!mobileMenuBtn.contains(e.target) && !navLinks.contains(e.target)) {
+        navLinks.classList.remove('active');
+      }
+    });
+
+    // Calculator Tabs
+    const giftcardsTab = document.getElementById('giftcardsTab');
+    const cryptoTab = document.getElementById('cryptoTab');
+    const giftcardsForm = document.getElementById('giftcardsForm');
+    const cryptoForm = document.getElementById('cryptoForm');
+
+    giftcardsTab.addEventListener('click', () => {
+      giftcardsTab.classList.add('active');
+      cryptoTab.classList.remove('active');
+      giftcardsForm.style.display = 'flex';
+      cryptoForm.style.display = 'none';
+    });
+
+    cryptoTab.addEventListener('click', () => {
+      cryptoTab.classList.add('active');
+      giftcardsTab.classList.remove('active');
+      cryptoForm.style.display = 'flex';
+      giftcardsForm.style.display = 'none';
+    });
+
+    // Gift Card Calculator
+    const giftcardType = document.getElementById('giftcardType');
+    const giftcardAmount = document.getElementById('giftcardAmount');
+    const giftcardResult = document.getElementById('giftcardResult');
+
+    function calculateGiftcard() {
+      const selectedOption = giftcardType.options[giftcardType.selectedIndex];
+      const rate = selectedOption.dataset.rate || 0;
+      const amount = parseFloat(giftcardAmount.value) || 0;
+      const result = rate * amount;
+      giftcardResult.innerHTML = '&#8358;' + result.toLocaleString('en-NG');
+    }
+
+    giftcardType.addEventListener('change', calculateGiftcard);
+    giftcardAmount.addEventListener('input', calculateGiftcard);
+
+    // Crypto Calculator
+    const cryptoType = document.getElementById('cryptoType');
+    const cryptoAmount = document.getElementById('cryptoAmount');
+    const cryptoResult = document.getElementById('cryptoResult');
+
+    function calculateCrypto() {
+      const selectedOption = cryptoType.options[cryptoType.selectedIndex];
+      const rate = selectedOption.dataset.rate || 0;
+      const amount = parseFloat(cryptoAmount.value) || 0;
+      const result = rate * amount;
+      cryptoResult.innerHTML = '&#8358;' + result.toLocaleString('en-NG');
+    }
+
+    cryptoType.addEventListener('change', calculateCrypto);
+    cryptoAmount.addEventListener('input', calculateCrypto);
+  </script>
+</body>
+</html>

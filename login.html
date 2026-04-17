@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Login - BITTRIXPAY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #000000;
+      color: #F8FAFC;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    /* Animated background glow */
+    .auth-page::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes bgPulse {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-5%, 5%) scale(1.1); }
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 380px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .auth-header {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .auth-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .auth-logo img {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      padding: 1px;
+    }
+
+    .auth-logo span {
+      font-size: 1.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .auth-header h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      color: #F8FAFC;
+    }
+
+    .auth-header p {
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .auth-card {
+      background: #111111;
+      border: 1px solid #1A1A1A;
+      border-radius: 1rem;
+      padding: 1.5rem;
+      backdrop-filter: blur(20px);
+    }
+
+    .alert {
+      padding: 0.65rem 0.85rem;
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+      display: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .alert-error {
+      background: rgba(220, 38, 38, 0.15);
+      color: #F87171;
+      border: 1px solid rgba(220, 38, 38, 0.25);
+    }
+
+    .alert-success {
+      background: rgba(5, 150, 105, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(5, 150, 105, 0.25);
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.75rem;
+      color: #AAA;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .input-wrapper svg {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #555;
+      pointer-events: none;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem 0.75rem 0.7rem 2.5rem;
+      border: 1.5px solid #2A2A2A;
+      border-radius: 0.6rem;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      background: #0A0A0A;
+      color: #F8FAFC;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .form-group input::placeholder {
+      color: #555;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #7C3AED;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+
+    .forgot-row {
+      text-align: right;
+      margin-top: -0.25rem;
+    }
+
+    .forgot-row a {
+      font-size: 0.75rem;
+      color: #7C3AED;
+      font-weight: 500;
+    }
+
+    .btn-auth {
+      width: 100%;
+      padding: 0.7rem;
+      background: linear-gradient(135deg, #7C3AED, #EC4899);
+      color: white;
+      border: none;
+      border-radius: 0.6rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 0.25rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .btn-auth:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px rgba(124, 58, 237, 0.35);
+    }
+
+    .btn-auth:active {
+      transform: scale(0.98);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 0.75rem 0;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #2A2A2A;
+    }
+
+    .divider span {
+      font-size: 0.7rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 1.25rem;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .auth-footer a {
+      color: #7C3AED;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="auth-header">
+        <div class="auth-logo">
+          <img src="logo.jpeg" alt="BITTRIXPAY">
+          <span>BITTRIXPAY</span>
+        </div>
+        <h1>Welcome Back</h1>
+        <p>Sign in to continue trading</p>
+      </div>
+
+      <div class="auth-card">
+        <div class="alert alert-error" id="errorAlert"></div>
+        <div class="alert alert-success" id="successAlert"></div>
+
+        <form class="auth-form" id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <div class="input-wrapper">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,6 12,13 2,6"/></svg>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+          </div>
+
+          <div class="forgot-row">
+            <a href="#">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn-auth">Sign In</button>
+        </form>
+
+        <div class="divider"><span>or</span></div>
+
+        <p class="auth-footer">
+          Don't have an account? <a href="register.html">Create one</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app-database.js"></script>
+  <script>
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+
+    const form = document.getElementById('loginForm');
+    const errorAlert = document.getElementById('errorAlert');
+    const successAlert = document.getElementById('successAlert');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      errorAlert.style.display = 'none';
+      successAlert.style.display = 'none';
+
+      try {
+        await AppDB.init();
+        await AppDB.login(email, password);
+
+        successAlert.textContent = 'Login successful! Redirecting...';
+        successAlert.style.display = 'block';
+        setTimeout(() => {
+          window.location.href = 'dashboard.html';
+        }, 1000);
+      } catch (error) {
+        errorAlert.textContent = error.message || 'Login failed';
+        errorAlert.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

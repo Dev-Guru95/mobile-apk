@@ -1,0 +1,8 @@
+{
+  "appId": "com.bittrixpay.app",
+  "appName": "BITTRIXPAY",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
